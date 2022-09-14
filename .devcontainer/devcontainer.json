@@ -1,0 +1,16 @@
+{
+	"name": "Elixir DevContainer",
+
+	"context": "..",
+
+	"dockerFile": "./Dockerfile",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"JakeBecker.elixir-ls",
+				"mhutchie.git-graph"
+			]
+		}
+	}
+}
