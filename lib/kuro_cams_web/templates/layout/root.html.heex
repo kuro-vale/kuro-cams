@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -7,24 +7,58 @@
     <meta name="csrf-token" content={csrf_token_value()}>
     <%= live_title_tag assigns[:page_title] || "KuroCams", suffix: " · Phoenix Framework" %>
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"/>
     <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer></script>
+    <script>
+    function data() {
+      return {
+        dark: true,
+        isSideMenuOpen: false,
+        toggleSideMenu() {
+          this.isSideMenuOpen = !this.isSideMenuOpen
+        },
+        closeSideMenu() {
+          this.isSideMenuOpen = false
+        },
+        isNotificationsMenuOpen: false,
+        toggleNotificationsMenu() {
+          this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen
+        },
+        closeNotificationsMenu() {
+          this.isNotificationsMenuOpen = false
+        },
+        isProfileMenuOpen: false,
+        toggleProfileMenu() {
+          this.isProfileMenuOpen = !this.isProfileMenuOpen
+        },
+        closeProfileMenu() {
+          this.isProfileMenuOpen = false
+        },
+        isPagesMenuOpen: false,
+        togglePagesMenu() {
+          this.isPagesMenuOpen = !this.isPagesMenuOpen
+        },
+        // Modal
+        isModalOpen: false,
+        trapCleanup: null,
+        openModal() {
+          this.isModalOpen = true
+          this.trapCleanup = focusTrap(document.querySelector('#modal'))
+        },
+        closeModal() {
+          this.isModalOpen = false
+          this.trapCleanup()
+        },
+      }
+    }
+    </script>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav>
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
-        </nav>
-        <a href="https://phoenixframework.org/" class="phx-logo">
-          <img src={Routes.static_path(@conn, "/images/phoenix.png")} alt="Phoenix Framework Logo"/>
-        </a>
-      </section>
-    </header>
     <%= @inner_content %>
   </body>
 </html>

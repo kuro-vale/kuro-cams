@@ -30,7 +30,8 @@ config :kuro_cams, KuroCamsWeb.Endpoint,
   secret_key_base: "OyBtc8nke/1ZTMMDrYJYzrW5WyfMp1ZgOlLBGNb3E7iPFr1mBqZcT9eCqEQe7u0v",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
+    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
 # ## SSL Support

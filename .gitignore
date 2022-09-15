@@ -1,6 +1,6 @@
 # vscode
 /.vscode
-
+/node_modules
 # Env variables
 env.sh
 
