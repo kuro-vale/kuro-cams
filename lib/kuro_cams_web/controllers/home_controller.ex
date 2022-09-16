@@ -1,4 +1,4 @@
-defmodule KuroCamsWeb.PageController do
+defmodule KuroCamsWeb.HomeController do
   use KuroCamsWeb, :controller
 
   def index(conn, _params) do
