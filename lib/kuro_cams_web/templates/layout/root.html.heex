@@ -59,6 +59,18 @@
     </script>
   </head>
   <body>
-    <%= @inner_content %>
+    <div
+        class="flex h-screen bg-gray-50 dark:bg-gray-900"
+        :class="{ 'overflow-hidden': isSideMenuOpen}"
+      >
+      <%= render("desktop_sidebar.html") %>
+      <%= render("mobile_sidebar.html") %>
+      <div class="flex flex-col flex-1">
+        <%= render("topbar.html") %>
+        <main class="h-full pb-16 overflow-y-auto">
+          <%= @inner_content %>
+        </main>
+      </div>
+    </div>
   </body>
 </html>

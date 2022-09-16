@@ -9,7 +9,8 @@
 			"extensions": [
 				"streetsidesoftware.code-spell-checker",
 				"JakeBecker.elixir-ls",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"bradlc.vscode-tailwindcss"
 			]
 		}
 	}
