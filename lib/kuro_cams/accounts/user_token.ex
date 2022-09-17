@@ -3,7 +3,6 @@ defmodule KuroCams.Accounts.UserToken do
   import Ecto.Query
   alias KuroCams.Accounts.UserToken
 
-  @hash_algorithm :sha256
   @rand_size 32
 
   # It is very important to keep the reset password token expiry short,

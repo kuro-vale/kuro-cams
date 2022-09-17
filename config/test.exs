@@ -1,11 +1,6 @@
 import Config
 
-database_url =
-  System.get_env("TEST_DATABASE_URL") ||
-    raise """
-    environment variable TEST_DATABASE_URL is missing.
-    For example: ecto://USER:PASS@HOST/DATABASE
-    """
+database_url = System.get_env("TEST_DATABASE_URL")
 
 # Only in tests, remove the complexity from the password hashing algorithm
 config :bcrypt_elixir, :log_rounds, 1

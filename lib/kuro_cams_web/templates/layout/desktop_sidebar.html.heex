@@ -25,11 +25,9 @@ class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-
             aria-hidden="true"
             ></span>
             <% end %>
-            <a
-            class={"inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 #{active_class(@conn, Routes.home_path(@conn, :index))}"}
-            href="#"
-            >
-            <svg
+            <%= link raw(
+            """
+                <svg
                 class="w-5 h-5"
                 aria-hidden="true"
                 fill="none"
@@ -44,7 +42,10 @@ class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-
                 ></path>
             </svg>
             <span class="ml-4">Home</span>
-            </a>
+            """
+            ), to: Routes.home_path(@conn, :index),
+            class: "inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 #{active_class(@conn, Routes.home_path(@conn, :index))}"
+             %>
         </li>
         </ul>
         <ul>
