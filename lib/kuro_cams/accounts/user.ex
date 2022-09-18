@@ -1,4 +1,7 @@
 defmodule KuroCams.Accounts.User do
+  @moduledoc """
+  User module
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

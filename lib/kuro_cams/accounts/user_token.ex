@@ -1,4 +1,7 @@
 defmodule KuroCams.Accounts.UserToken do
+  @moduledoc """
+  Module to generate tokens
+  """
   use Ecto.Schema
   import Ecto.Query
   alias KuroCams.Accounts.UserToken

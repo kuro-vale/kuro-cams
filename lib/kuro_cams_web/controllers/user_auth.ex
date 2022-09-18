@@ -1,4 +1,7 @@
 defmodule KuroCamsWeb.UserAuth do
+  @moduledoc """
+  Module for authenticate users
+  """
   import Plug.Conn
   import Phoenix.Controller
 
@@ -130,7 +133,7 @@ defmodule KuroCamsWeb.UserAuth do
     if conn.assigns[:current_user] do
       conn
     else
-      raise KuroCamsWeb.Unauthorized, "Unauthorized"
+      raise KuroCamsWeb.UnauthorizedError, "Unauthorized"
     end
   end
 

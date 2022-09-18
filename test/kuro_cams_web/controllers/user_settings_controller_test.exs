@@ -7,7 +7,7 @@ defmodule KuroCamsWeb.UserSettingsControllerTest do
     test "renders settings page", %{conn: conn} do
       conn = get(conn, Routes.user_settings_path(conn, :edit))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Settings</h1>"
+      assert response =~ "Profile</h2>"
     end
 
     test "raise error if user is not logged in" do
