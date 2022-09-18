@@ -130,7 +130,7 @@ defmodule KuroCamsWeb.UserAuth do
     if conn.assigns[:current_user] do
       conn
     else
-      raise HelloWeb.Unauthorized, "Unauthorized"
+      raise KuroCamsWeb.Unauthorized, "Unauthorized"
     end
   end
 

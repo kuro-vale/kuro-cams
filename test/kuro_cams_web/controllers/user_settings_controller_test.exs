@@ -10,10 +10,11 @@ defmodule KuroCamsWeb.UserSettingsControllerTest do
       assert response =~ "<h1>Settings</h1>"
     end
 
-    test "redirects if user is not logged in" do
+    test "raise error if user is not logged in" do
       conn = build_conn()
-      conn = get(conn, Routes.user_settings_path(conn, :edit))
-      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+      assert_raise KuroCamsWeb.Unauthorized, fn ->
+        get(conn, Routes.user_settings_path(conn, :edit))
+      end
     end
   end
 end

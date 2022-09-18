@@ -109,10 +109,10 @@ defmodule KuroCamsWeb do
   end
 end
 
-defmodule HelloWeb.Unauthorized do
+defmodule KuroCamsWeb.Unauthorized do
   defexception [:message, plug_status: 401]
 end
 
-defmodule HelloWeb.Forbidden do
+defmodule KuroCamsWeb.Forbidden do
   defexception [:message, plug_status: 403]
 end
