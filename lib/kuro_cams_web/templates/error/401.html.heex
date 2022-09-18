@@ -1,0 +1,9 @@
+<h1 class="text-6xl font-semibold text-gray-700 dark:text-gray-200">
+    401
+</h1>
+<p class="text-gray-700 dark:text-gray-300">
+    Unauthorized 
+    <%= link "please login", to: Routes.user_session_path(@conn, :new),
+    class: "text-purple-600 hover:underline dark:text-purple-300" %>
+    .
+</p>

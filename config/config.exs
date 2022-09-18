@@ -13,7 +13,7 @@ config :kuro_cams,
 # Configures the endpoint
 config :kuro_cams, KuroCamsWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: KuroCamsWeb.ErrorView, accepts: ~w(html json), layout: false],
+  render_errors: [view: KuroCamsWeb.ErrorView, accepts: ~w(html json), layout: {KuroCamsWeb.LayoutView, :error_layout}],
   pubsub_server: KuroCams.PubSub,
   live_view: [signing_salt: "jHJc3198"]
 

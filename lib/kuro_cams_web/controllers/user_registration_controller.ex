@@ -14,7 +14,6 @@ defmodule KuroCamsWeb.UserRegistrationController do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "User created successfully.")
         |> UserAuth.log_in_user(user)
 
       {:error, %Ecto.Changeset{} = changeset} ->

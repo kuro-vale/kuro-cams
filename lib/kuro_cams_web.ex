@@ -108,3 +108,11 @@ defmodule KuroCamsWeb do
     apply(__MODULE__, which, [])
   end
 end
+
+defmodule HelloWeb.Unauthorized do
+  defexception [:message, plug_status: 401]
+end
+
+defmodule HelloWeb.Forbidden do
+  defexception [:message, plug_status: 403]
+end
