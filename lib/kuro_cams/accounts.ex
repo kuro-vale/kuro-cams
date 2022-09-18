@@ -10,6 +10,10 @@ defmodule KuroCams.Accounts do
 
   ## Database getters
 
+  def get_all_users() do
+    Repo.all(User)
+  end
+  
   @doc """
   Gets a user by username.
 
