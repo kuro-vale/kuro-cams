@@ -59,15 +59,14 @@
     </script>
   </head>
   <body>
-    <%= render "_user_menu.html", assigns %>
     <div
         class="flex h-screen bg-gray-50 dark:bg-gray-900"
         :class="{ 'overflow-hidden': isSideMenuOpen}"
       >
-      <%= render("desktop_sidebar.html", conn: @conn) %>
-      <%= render("mobile_sidebar.html", conn: @conn) %>
+      <%= render("desktop_sidebar.html", assigns) %>
+      <%= render("mobile_sidebar.html", assigns) %>
       <div class="flex flex-col flex-1">
-        <%= render("topbar.html") %>
+        <%= render("topbar.html", assigns) %>
         <main class="h-full pb-16 overflow-y-auto">
           <%= @inner_content %>
         </main>

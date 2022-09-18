@@ -22,9 +22,10 @@
         </svg>
     </button>
     <!-- Separator -->
-    <div>
+    <div class="w-8 h-8">
     </div>
     <ul class="flex items-center flex-shrink-0 space-x-6">
+    <%= if @current_user do %>
         <!-- Notifications menu -->
         <li class="relative">
         <button
@@ -88,8 +89,8 @@
         >
             <img
             class="object-cover w-8 h-8 rounded-full"
-            src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-            alt=""
+            src={"https://robohash.org/#{@current_user.username}?set=set4"}
+            alt="profile photo"
             aria-hidden="true"
             />
         </button>
@@ -104,10 +105,8 @@
             aria-label="submenu"
             >
             <li class="flex">
-                <a
-                class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                href="#"
-                >
+            <%= link raw(
+                """
                 <svg
                     class="w-4 h-4 mr-3"
                     aria-hidden="true"
@@ -123,13 +122,14 @@
                     ></path>
                 </svg>
                 <span>Profile</span>
-                </a>
+                """
+                ), to: Routes.user_settings_path(@conn, :edit), 
+                class: "inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200" 
+            %>
             </li>
             <li class="flex">
-                <a
-                class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                href="#"
-                >
+            <%= link raw(
+                """
                 <svg
                     class="w-4 h-4 mr-3"
                     aria-hidden="true"
@@ -145,11 +145,15 @@
                     ></path>
                 </svg>
                 <span>Log out</span>
-                </a>
+                """
+                ), to: Routes.user_session_path(@conn, :delete), method: :delete,
+                class: "inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+            %>
             </li>
             </ul>
         </template>
         </li>
+    <% end %>
     </ul>
     </div>
 </header>
