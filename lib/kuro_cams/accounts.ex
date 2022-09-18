@@ -93,41 +93,6 @@ defmodule KuroCams.Accounts do
     User.registration_changeset(user, attrs, hash_password: false)
   end
 
-  ## Settings
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for changing the user username.
-
-  ## Examples
-
-      iex> change_user_username(user)
-      %Ecto.Changeset{data: %User{}}
-
-  """
-  def change_user_username(user, attrs \\ %{}) do
-    User.username_changeset(user, attrs)
-  end
-
-  @doc """
-  Emulates that the username will change without actually changing
-  it in the database.
-
-  ## Examples
-
-      iex> apply_user_username(user, "valid password", %{username: ...})
-      {:ok, %User{}}
-
-      iex> apply_user_username(user, "invalid password", %{username: ...})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def apply_user_username(user, password, attrs) do
-    user
-    |> User.username_changeset(attrs)
-    |> User.validate_current_password(password)
-    |> Ecto.Changeset.apply_action(:update)
-  end
-
   ## Session
 
   @doc """
