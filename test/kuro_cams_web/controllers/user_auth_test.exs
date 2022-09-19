@@ -129,7 +129,7 @@ defmodule KuroCamsWeb.UserAuthTest do
 
   describe "require_authenticated_user/2" do
     test "raise error if user is not authenticated", %{conn: conn} do
-      assert_raise KuroCamsWeb.Unauthorized, fn ->
+      assert_raise KuroCamsWeb.UnauthorizedError, fn ->
         conn |> UserAuth.require_authenticated_user([])
       end
     end

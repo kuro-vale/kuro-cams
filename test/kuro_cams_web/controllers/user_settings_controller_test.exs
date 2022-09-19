@@ -12,7 +12,7 @@ defmodule KuroCamsWeb.UserSettingsControllerTest do
 
     test "raise error if user is not logged in" do
       conn = build_conn()
-      assert_raise KuroCamsWeb.Unauthorized, fn ->
+      assert_raise KuroCamsWeb.UnauthorizedError, fn ->
         get(conn, Routes.user_settings_path(conn, :edit))
       end
     end
