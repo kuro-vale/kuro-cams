@@ -63,6 +63,8 @@
                     </td>
                     <td class="px-4 py-3">
                     <div class="flex items-center space-x-4 text-sm">
+                    <%= if @current_user && @current_user.id == user.id do %>
+                    <% else %>
                         <.form let={f} for={@conn} action={Routes.chat_path(@conn, :create)} as={:to_user}>
                         <%= text_input f, :id, value: user.id , class: "hidden" %>
                         <button
@@ -81,6 +83,7 @@
                         </svg>
                         </button>
                         </.form>
+                        <% end %>
                     </div>
                     </td>
                 </tr>

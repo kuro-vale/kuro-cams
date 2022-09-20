@@ -11,9 +11,9 @@ defmodule KuroCams.ChatsTest do
 
     @invalid_attrs %{uuid: nil}
 
-    test "list_rooms/0 returns all rooms" do
+    test "get_rooms_by_user/1 returns user's rooms" do
       room = room_fixture()
-      assert Chats.list_rooms() == [room]
+      assert Chats.get_rooms_by_user(room.from_user) == [room]
     end
 
     test "get_room_by_uuid!/1 returns the room with given uuid" do

@@ -8,17 +8,8 @@ defmodule KuroCams.Chats do
 
   alias KuroCams.Chats.Room
 
-  @doc """
-  Returns the list of rooms.
-
-  ## Examples
-
-      iex> list_rooms()
-      [%Room{}, ...]
-
-  """
-  def list_rooms do
-    Repo.all(Room)
+  def get_rooms_by_user(user_id) do
+    Repo.all(from r in Room, where: r.from_user == ^user_id)
   end
 
   def get_room_by_uuid!(uuid), do: Repo.get_by(Room, uuid: uuid)
