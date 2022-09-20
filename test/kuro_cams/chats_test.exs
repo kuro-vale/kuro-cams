@@ -45,4 +45,29 @@ defmodule KuroCams.ChatsTest do
       assert nil == Chats.get_room_by_uuid!(room.uuid)
     end
   end
+
+  describe "messages" do
+    alias KuroCams.Chats.Message
+
+    import KuroCams.ChatsFixtures
+
+    @invalid_attrs %{body: nil}
+
+    test "list_messages/0 returns all messages" do
+      message = message_fixture()
+      assert Chats.list_messages() == [message]
+    end
+
+    test "create_message/1 with valid data creates a message" do
+      room = room_fixture()
+      valid_attrs = %{body: "some body", room: room.id}
+
+      assert {:ok, %Message{} = message} = Chats.create_message(valid_attrs)
+      assert message.body == "some body"
+    end
+
+    test "create_message/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Chats.create_message(@invalid_attrs)
+    end
+  end
 end

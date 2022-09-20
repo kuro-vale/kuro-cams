@@ -31,4 +31,24 @@ defmodule KuroCams.ChatsFixtures do
 
     room
   end
+
+  def unique_room_id do
+    room = room_fixture()
+    room.id
+  end
+
+  @doc """
+  Generate a message.
+  """
+  def message_fixture(attrs \\ %{}) do
+    {:ok, message} =
+      attrs
+      |> Enum.into(%{
+        body: "some body",
+        room: unique_room_id()
+      })
+      |> KuroCams.Chats.create_message()
+
+    message
+  end
 end

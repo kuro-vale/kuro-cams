@@ -51,4 +51,37 @@ defmodule KuroCams.Chats do
   def delete_room(%Room{} = room) do
     Repo.delete(room)
   end
+
+  alias KuroCams.Chats.Message
+
+  @doc """
+  Returns the list of messages.
+
+  ## Examples
+
+      iex> list_messages()
+      [%Message{}, ...]
+
+  """
+  def list_messages do
+    Repo.all(Message)
+  end
+
+  @doc """
+  Creates a message.
+
+  ## Examples
+
+      iex> create_message(%{field: value})
+      {:ok, %Message{}}
+
+      iex> create_message(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_message(attrs \\ %{}) do
+    %Message{}
+    |> Message.changeset(attrs)
+    |> Repo.insert()
+  end
 end
