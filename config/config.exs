@@ -13,7 +13,11 @@ config :kuro_cams,
 # Configures the endpoint
 config :kuro_cams, KuroCamsWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: KuroCamsWeb.ErrorView, accepts: ~w(html json), layout: {KuroCamsWeb.LayoutView, :error_layout}],
+  render_errors: [
+    view: KuroCamsWeb.ErrorView,
+    accepts: ~w(html json),
+    layout: {KuroCamsWeb.LayoutView, :error_layout}
+  ],
   pubsub_server: KuroCams.PubSub,
   live_view: [signing_salt: "jHJc3198"]
 
@@ -47,14 +51,16 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :tailwind, version: "3.1.8", default: [
-  args: ~w(
+config :tailwind,
+  version: "3.1.8",
+  default: [
+    args: ~w(
     --config=tailwind.config.js
     --input=css/app.css
     --output=../priv/static/assets/app.css
   ),
-  cd: Path.expand("../assets", __DIR__)
-]
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

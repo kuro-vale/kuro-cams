@@ -1,8 +1,6 @@
 {
 	"name": "Elixir DevContainer",
-
 	"context": "..",
-
 	"dockerFile": "./Dockerfile",
 	"customizations": {
 		"vscode": {
