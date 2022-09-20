@@ -72,6 +72,8 @@ defmodule KuroCamsWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/users/settings", UserSettingsController, :edit
+    get "/chats/:uuid", ChatController, :show
+    post "/chats", ChatController, :create
   end
 
   scope "/", KuroCamsWeb do

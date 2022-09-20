@@ -16,9 +16,9 @@ defmodule KuroCams.ChatsTest do
       assert Chats.list_rooms() == [room]
     end
 
-    test "get_room!/1 returns the room with given id" do
+    test "get_room_by_uuid!/1 returns the room with given uuid" do
       room = room_fixture()
-      assert Chats.get_room!(room.id) == room
+      assert Chats.get_room_by_uuid!(room.uuid) == room
     end
 
     test "create_room/1 with valid data creates a room" do
@@ -34,29 +34,10 @@ defmodule KuroCams.ChatsTest do
       assert {:error, %Ecto.Changeset{}} = Chats.create_room(@invalid_attrs)
     end
 
-    test "update_room/2 with valid data updates the room" do
-      room = room_fixture()
-      update_attrs = %{uuid: "7488a646-e31f-11e4-aace-600308960668"}
-
-      assert {:ok, %Room{} = room} = Chats.update_room(room, update_attrs)
-      assert room.uuid == "7488a646-e31f-11e4-aace-600308960668"
-    end
-
-    test "update_room/2 with invalid data returns error changeset" do
-      room = room_fixture()
-      assert {:error, %Ecto.Changeset{}} = Chats.update_room(room, @invalid_attrs)
-      assert room == Chats.get_room!(room.id)
-    end
-
     test "delete_room/1 deletes the room" do
       room = room_fixture()
       assert {:ok, %Room{}} = Chats.delete_room(room)
-      assert_raise Ecto.NoResultsError, fn -> Chats.get_room!(room.id) end
-    end
-
-    test "change_room/1 returns a room changeset" do
-      room = room_fixture()
-      assert %Ecto.Changeset{} = Chats.change_room(room)
+      assert nil == Chats.get_room_by_uuid!(room.uuid)
     end
   end
 end
