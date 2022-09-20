@@ -37,6 +37,19 @@ defmodule KuroCamsWeb.ChatControllerTest do
       assert redirected_to(conn) == Routes.home_path(conn, :index)
     end
 
+    test "redirect to show if chat already exists", %{conn: conn} do
+      new_user = KuroCams.AccountsFixtures.user_fixture()
+      to_user = %{id: new_user.id}
+
+      creation_conn = post(conn, Routes.chat_path(conn, :create), to_user: to_user)
+      creations_params = redirected_params(creation_conn)
+      conn = post(conn, Routes.chat_path(conn, :create), to_user: to_user)
+
+      assert creations_params == redirected_params(conn)
+      assert %{uuid: uuid} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.chat_path(conn, :show, uuid)
+    end
+
     test "redirects if user is not logged in" do
       new_user = KuroCams.AccountsFixtures.user_fixture()
       to_user = %{id: new_user.id}

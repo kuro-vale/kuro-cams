@@ -14,6 +14,10 @@ defmodule KuroCams.Chats do
 
   def get_room_by_uuid!(uuid), do: Repo.get_by(Room, uuid: uuid)
 
+  def get_room_by_from_user_and_to_user(from_user, to_user) do
+    Repo.get_by(Room, from_user: from_user, to_user: to_user)
+  end
+
   @doc """
   Creates a room.
 

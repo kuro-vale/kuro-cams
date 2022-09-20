@@ -16,6 +16,11 @@ defmodule KuroCams.ChatsTest do
       assert Chats.get_rooms_by_user(room.from_user) == [room]
     end
 
+    test "get_room_by_from_user_and_to_user/1 returns the room with given ids" do
+      room = room_fixture()
+      assert Chats.get_room_by_from_user_and_to_user(room.from_user, room.to_user) == room
+    end
+
     test "get_room_by_uuid!/1 returns the room with given uuid" do
       room = room_fixture()
       assert Chats.get_room_by_uuid!(room.uuid) == room
