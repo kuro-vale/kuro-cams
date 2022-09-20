@@ -58,4 +58,23 @@ defmodule KuroCamsWeb.ChatControllerTest do
       assert redirected_to(conn) == Routes.user_session_path(conn, :new)
     end
   end
+
+  describe "delete room" do
+    test "deletes chosen room", %{conn: conn} do
+      room = KuroCams.ChatsFixtures.room_fixture()
+      conn = delete(conn, Routes.chat_path(conn, :delete, room.uuid))
+      assert redirected_to(conn) == Routes.home_path(conn, :index)
+
+      assert_error_sent 404, fn ->
+        get(conn, Routes.chat_path(conn, :show, room.uuid))
+      end
+    end
+
+    test "redirects if user is not logged in" do
+      room = KuroCams.ChatsFixtures.room_fixture()
+      conn = build_conn()
+      conn = delete(conn, Routes.chat_path(conn, :delete, room.uuid))
+      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+    end
+  end
 end

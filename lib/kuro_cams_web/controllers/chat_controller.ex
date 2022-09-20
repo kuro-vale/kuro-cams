@@ -30,6 +30,18 @@ defmodule KuroCamsWeb.ChatController do
       uuid
       |> Chats.get_room_by_uuid!()
 
+    if room == nil do
+      raise KuroCamsWeb.NotFoundError, "Not Found"
+    end
+
     render(conn, "show.html", room: room)
+  end
+
+  def delete(conn, %{"uuid" => uuid}) do
+    room = Chats.get_room_by_uuid!(uuid)
+    {:ok, _room} = Chats.delete_room(room)
+
+    conn
+    |> redirect(to: Routes.home_path(conn, :index))
   end
 end

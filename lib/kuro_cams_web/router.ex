@@ -74,6 +74,7 @@ defmodule KuroCamsWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     get "/chats/:uuid", ChatController, :show
     post "/chats", ChatController, :create
+    delete "/chats/:uuid", ChatController, :delete
   end
 
   scope "/", KuroCamsWeb do

@@ -116,3 +116,7 @@ end
 defmodule KuroCamsWeb.ForbiddenError do
   defexception [:message, plug_status: 403]
 end
+
+defmodule KuroCamsWeb.NotFoundError do
+  defexception [:message, plug_status: 404]
+end

@@ -112,7 +112,7 @@ class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-
                     to: Routes.chat_path(@conn, :show, room.uuid), 
                     class: "w-full #{active_class(@conn, Routes.chat_path(@conn, :show, room.uuid))}" 
                     %>
-                    X
+                    <span><%= link "X", to: Routes.chat_path(@conn, :delete, room.uuid), method: :delete %></span>
                     </li>
                 <% end %>
                 </ul>
