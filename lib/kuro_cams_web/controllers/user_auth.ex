@@ -148,4 +148,19 @@ defmodule KuroCamsWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: "/"
+
+  def require_chat_authorized_user(conn, _opts) do
+    current_user = conn.assigns[:current_user]
+    room = KuroCams.Chats.get_room_by_uuid!(conn.path_params["uuid"])
+
+    if room == nil do
+      raise KuroCamsWeb.NotFoundError, "Not Found"
+    end
+
+    if current_user.id == room.from_user do
+      conn
+    else
+      raise KuroCamsWeb.ForbiddenError, "Forbidden"
+    end
+  end
 end

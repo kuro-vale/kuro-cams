@@ -8,7 +8,7 @@ defmodule KuroCams.ChatsFixtures do
   Generate a unique room uuid.
   """
   def unique_room_uuid do
-    Ecto.UUID.generate
+    Ecto.UUID.generate()
   end
 
   def unique_user_id do

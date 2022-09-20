@@ -23,6 +23,21 @@ defmodule KuroCamsWeb.Router do
     get "/", HomeController, :index
   end
 
+  ## Chats Routes
+
+  scope "/", KuroCamsWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    post "/chats", ChatController, :create
+  end
+
+  scope "/", KuroCamsWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_chat_authorized_user]
+
+    get "/chats/:uuid", ChatController, :show
+    delete "/chats/:uuid", ChatController, :delete
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", KuroCamsWeb do
   #   pipe_through :api
@@ -72,9 +87,6 @@ defmodule KuroCamsWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     get "/users/settings", UserSettingsController, :edit
-    get "/chats/:uuid", ChatController, :show
-    post "/chats", ChatController, :create
-    delete "/chats/:uuid", ChatController, :delete
   end
 
   scope "/", KuroCamsWeb do

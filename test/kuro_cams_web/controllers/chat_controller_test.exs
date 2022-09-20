@@ -4,11 +4,19 @@ defmodule KuroCamsWeb.ChatControllerTest do
   setup :register_and_log_in_user
 
   describe "GET /chats/:uuid" do
-    test "renders chat page", %{conn: conn} do
-      room = KuroCams.ChatsFixtures.room_fixture()
+    test "renders chat page", %{conn: conn, user: logged_user} do
+      room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
       conn = get(conn, Routes.chat_path(conn, :show, room.uuid))
       response = html_response(conn, 200)
       assert response =~ "Cards</h2>"
+    end
+
+    test "raise error if user is unauthorized", %{conn: conn} do
+      room = KuroCams.ChatsFixtures.room_fixture()
+
+      assert_raise KuroCamsWeb.ForbiddenError, fn ->
+        get(conn, Routes.chat_path(conn, :show, room.uuid))
+      end
     end
 
     test "redirects if user is not logged in" do
@@ -60,13 +68,21 @@ defmodule KuroCamsWeb.ChatControllerTest do
   end
 
   describe "delete room" do
-    test "deletes chosen room", %{conn: conn} do
-      room = KuroCams.ChatsFixtures.room_fixture()
+    test "deletes chosen room", %{conn: conn, user: logged_user} do
+      room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
       conn = delete(conn, Routes.chat_path(conn, :delete, room.uuid))
       assert redirected_to(conn) == Routes.home_path(conn, :index)
 
       assert_error_sent 404, fn ->
         get(conn, Routes.chat_path(conn, :show, room.uuid))
+      end
+    end
+
+    test "raise error if user is unauthorized", %{conn: conn} do
+      room = KuroCams.ChatsFixtures.room_fixture()
+
+      assert_raise KuroCamsWeb.ForbiddenError, fn ->
+        delete(conn, Routes.chat_path(conn, :delete, room.uuid))
       end
     end
 
