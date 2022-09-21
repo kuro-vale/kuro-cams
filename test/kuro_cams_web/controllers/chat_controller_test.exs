@@ -8,7 +8,7 @@ defmodule KuroCamsWeb.ChatControllerTest do
       room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
       conn = get(conn, Routes.chat_path(conn, :show, room.uuid))
       response = html_response(conn, 200)
-      assert response =~ "Cards</h2>"
+      assert response =~ "Send</button>"
     end
 
     test "raise error if user is unauthorized", %{conn: conn} do
@@ -37,7 +37,7 @@ defmodule KuroCamsWeb.ChatControllerTest do
       assert redirected_to(conn) == Routes.chat_path(conn, :show, uuid)
 
       conn = get(conn, Routes.chat_path(conn, :show, uuid))
-      assert html_response(conn, 200) =~ "Cards</h2>"
+      assert html_response(conn, 200) =~ "Send</button>"
     end
 
     test "redirect to home when data is invalid", %{conn: conn, user: logged_user} do

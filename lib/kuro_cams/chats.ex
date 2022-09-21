@@ -19,6 +19,17 @@ defmodule KuroCams.Chats do
   end
 
   @doc """
+  If user A wants to chat with user B, will create a room from A to B, and user B will create a room from B to A
+  This methods get that pair of rooms ordered by users id
+  """
+  def get_pair_rooms_by_uuid(uuid) do
+    room =  get_room_by_uuid!(uuid)
+    supplier_query = from r in Room, where: r.from_user == ^room.to_user and r.to_user == ^room.from_user
+    query = from r in Room, where: r.from_user == ^room.from_user and r.to_user == ^room.to_user, union: ^supplier_query
+    Repo.all(from q in subquery(query), order_by: q.from_user)
+  end
+
+  @doc """
   Creates a room.
 
   ## Examples
@@ -54,17 +65,8 @@ defmodule KuroCams.Chats do
 
   alias KuroCams.Chats.Message
 
-  @doc """
-  Returns the list of messages.
-
-  ## Examples
-
-      iex> list_messages()
-      [%Message{}, ...]
-
-  """
-  def list_messages do
-    Repo.all(Message)
+  def list_room_messages(room_id) do
+    Repo.all(from m in Message, where: m.room == ^room_id)
   end
 
   @doc """

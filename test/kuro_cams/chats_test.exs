@@ -16,6 +16,32 @@ defmodule KuroCams.ChatsTest do
       assert Chats.get_rooms_by_user(room.from_user) == [room]
     end
 
+    test "get_pair_rooms_by_uuid/1 returns pair rooms" do
+      yin_room = room_fixture()
+      yang_room = room_fixture(from_user: yin_room.to_user, to_user: yin_room.from_user)
+      assert Chats.get_pair_rooms_by_uuid(yin_room.uuid) == [yin_room, yang_room]
+    end
+
+    test "get_pair_rooms_by_uuid/1 returns pair rooms bidirectionally" do
+      yin_room = room_fixture()
+      yang_room = room_fixture(from_user: yin_room.to_user, to_user: yin_room.from_user)
+      assert Chats.get_pair_rooms_by_uuid(yang_room.uuid) == [yin_room, yang_room]
+    end
+
+    test "get_pair_rooms_by_uuid/1 returns pair rooms ordered by user id" do
+      yin_room = room_fixture()
+      yang_room = room_fixture(from_user: yin_room.to_user, to_user: yin_room.from_user)
+      Chats.delete_room(yin_room)
+      yin_room = room_fixture(from_user: yang_room.to_user, to_user: yang_room.from_user)
+      assert Chats.get_pair_rooms_by_uuid(yin_room.uuid) == [yin_room, yang_room]
+    end
+
+    test "get_pair_rooms_by_uuid/1 returns one room" do
+      yin_room = room_fixture()
+      _room = room_fixture()
+      assert Chats.get_pair_rooms_by_uuid(yin_room.uuid) == [yin_room]
+    end
+
     test "get_room_by_from_user_and_to_user/1 returns the room with given ids" do
       room = room_fixture()
       assert Chats.get_room_by_from_user_and_to_user(room.from_user, room.to_user) == room
@@ -50,17 +76,19 @@ defmodule KuroCams.ChatsTest do
     alias KuroCams.Chats.Message
 
     import KuroCams.ChatsFixtures
+    import KuroCams.AccountsFixtures
 
     @invalid_attrs %{body: nil}
 
-    test "list_messages/0 returns all messages" do
+    test "list_room_messages/1 returns all room messages" do
       message = message_fixture()
-      assert Chats.list_messages() == [message]
+      assert Chats.list_room_messages(message.room) == [message]
     end
 
     test "create_message/1 with valid data creates a message" do
       room = room_fixture()
-      valid_attrs = %{body: "some body", room: room.id}
+      user = user_fixture()
+      valid_attrs = %{body: "some body", room: room.id, user: user.id}
 
       assert {:ok, %Message{} = message} = Chats.create_message(valid_attrs)
       assert message.body == "some body"

@@ -34,7 +34,9 @@ defmodule KuroCamsWeb.ChatController do
       raise KuroCamsWeb.NotFoundError, "Not Found"
     end
 
-    render(conn, "show.html", room: room)
+    room_messages = Chats.list_room_messages(room.id)
+
+    render(conn, "show.html", room: room, messages: room_messages)
   end
 
   def delete(conn, %{"uuid" => uuid}) do

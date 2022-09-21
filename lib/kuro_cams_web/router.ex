@@ -36,6 +36,8 @@ defmodule KuroCamsWeb.Router do
 
     get "/chats/:uuid", ChatController, :show
     delete "/chats/:uuid", ChatController, :delete
+    # Temporal method, must be replaced
+    post "/messages/:uuid", MessageController, :create
   end
 
   # Other scopes may use custom stacks.
