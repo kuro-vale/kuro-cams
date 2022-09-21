@@ -8,6 +8,7 @@ defmodule KuroCams.Chats.Message do
   schema "messages" do
     field :body, :string
     field :room, :id
+    field :user, :id
 
     timestamps()
   end
@@ -15,7 +16,7 @@ defmodule KuroCams.Chats.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:body, :room])
-    |> validate_required([:body, :room])
+    |> cast(attrs, [:body, :room, :user])
+    |> validate_required([:body, :room, :user])
   end
 end

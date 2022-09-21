@@ -45,7 +45,8 @@ defmodule KuroCams.ChatsFixtures do
       attrs
       |> Enum.into(%{
         body: "some body",
-        room: unique_room_id()
+        room: unique_room_id(),
+        user: unique_user_id()
       })
       |> KuroCams.Chats.create_message()
 
