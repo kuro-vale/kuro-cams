@@ -1,14 +1,13 @@
 <div class="container px-6 mx-auto grid">
   <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-  <%= KuroCams.Accounts.get_user!(@room.to_user).username %>
+  <%= @to_username %>
   <span
       class="ml-3 text-xs px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
   >
       Online
   </span>
   </h2>
-
-  <div class="overflow-auto" style="height: 67vh">
+  <div id="messages" class="overflow-auto" style="height: 67vh">
   <%= for message <- @messages do %>
     <%= if message.user == @current_user.id do %>
     <div class="flex justify-end gap-6 mb-4">
@@ -16,7 +15,7 @@
         class="min-w-0 p-4 text-white bg-purple-600 rounded-lg shadow-xs"
       >
         <h4 class="mb-4 font-semibold">
-          <%= KuroCams.Accounts.get_user!(message.user).username %>
+          <%= @from_username %>
         </h4>
         <p class="break-words">
           <%= message.body %>
@@ -29,7 +28,7 @@
           class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
         >
           <h4 class="mb-4 font-semibold text-gray-600 dark:text-gray-300">
-            <%= KuroCams.Accounts.get_user!(message.user).username %>
+            <%= @to_username %>
           </h4>
           <p class="text-gray-600 dark:text-gray-400 break-words">
             <%= message.body %>
@@ -39,18 +38,73 @@
     <% end %>
   <% end %>
   </div>
-
-  <.form let={f} for={@conn} action={Routes.message_path(@conn, :create, @room.uuid)} as={:message_body}>
+  <form id="sendMessageForm" action="">
     <div
       class="relative text-gray-500 focus-within:text-purple-600"
     >
-    <%= text_input f, :body, autocomplete: "off", class: "block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input",
-      required: "true"
-     %>
-     <button type="submit"
+      <input id="messageBody" type="text" autocomplete="off" class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" 
+      />
+      <button
         class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
       >
         Send</button>
     </div>
-  </.form>
+  </form>
 </div>
+
+<script type="module">
+// Connect to private chat socket
+<%= if @room.from_user < @room.to_user do %>
+let channel = window.chat_socket.channel("room:<%= @room.from_user %>-<%= @room.to_user %>", {})
+<% else %>
+let channel = window.chat_socket.channel("room:<%= @room.to_user %>-<%= @room.from_user %>", {})
+<% end %>
+
+let box = document.getElementById("messages")
+box.scrollTop = box.scrollHeight;
+let sendMessageForm = document.getElementById("sendMessageForm")
+sendMessageForm.addEventListener("submit", sendMessage);
+
+function sendMessage(event) {
+  let input = document.getElementById("messageBody")
+  if (input.value == "") {
+    event.preventDefault()
+    return false;
+  }
+  channel.push("new_msg", {body: input.value, user: <%= @current_user.id %>})
+  input.value = ''
+  event.preventDefault()
+}
+
+channel.on("new_msg", payload => {
+  let messageCard = document.createElement("div")
+  if (payload.user == <%= @current_user.id %>) {
+    messageCard.className = "flex justify-end gap-6 mb-4"
+    let messageContainer = document.createElement("div")
+    messageContainer.className = "min-w-0 p-4 text-white bg-purple-600 rounded-lg shadow-xs"
+    let messageTitle = document.createElement("h4")
+    messageTitle.className = "mb-4 font-semibold"
+    messageTitle.innerText = <%= @from_username %>
+    let messageBody = document.createElement("p")
+    messageBody.className = "break-words"
+  } else {
+    messageCard.className = "flex justify-start gap-6 mb-4"
+    let messageContainer = document.createElement("div")
+    messageContainer.className = "min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+    let messageTitle = document.createElement("h4")
+    messageTitle.className = "mb-4 font-semibold text-gray-600 dark:text-gray-300"
+    messageTitle.innerText = <%= @to_username %>
+    let messageBody = document.createElement("p")
+    messageBody.className = "text-gray-600 dark:text-gray-400 break-words"
+  }
+  messageBody.innerText = payload.body
+  messageContainer.appendChild(messageTitle)
+  messageContainer.appendChild(messageBody)
+  messageCard.appendChild(messageContainer)
+  box.scrollTop = box.scrollHeight;
+})
+
+channel.join()
+  .receive("ok", resp => { console.log("Joined successfully", resp) })
+  .receive("error", resp => { console.log("Unable to join", resp) })
+</script>

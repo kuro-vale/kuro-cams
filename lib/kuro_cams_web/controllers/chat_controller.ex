@@ -34,9 +34,12 @@ defmodule KuroCamsWeb.ChatController do
       raise KuroCamsWeb.NotFoundError, "Not Found"
     end
 
+    from_username = KuroCams.Accounts.get_user!(room.from_user).username
+    to_username = KuroCams.Accounts.get_user!(room.to_user).username
+
     room_messages = Chats.list_room_messages(room.id)
 
-    render(conn, "show.html", room: room, messages: room_messages)
+    render(conn, "show.html", room: room, messages: room_messages, from_username: from_username, to_username: to_username)
   end
 
   def delete(conn, %{"uuid" => uuid}) do
