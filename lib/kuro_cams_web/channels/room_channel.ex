@@ -7,8 +7,12 @@ defmodule KuroCamsWeb.RoomChannel do
   alias KuroCams.Chats
 
   @impl true
-  def join("room:" <> _private_room_id, _payload, socket) do
-    {:ok, socket}
+  def join("room:" <> private_room_id, _payload, socket) do
+    if authorized?(socket, private_room_id) do
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
   end
 
   @impl true
@@ -25,5 +29,9 @@ defmodule KuroCamsWeb.RoomChannel do
 
     broadcast(socket, "new_msg", payload)
     {:noreply, socket}
+  end
+
+  defp authorized?(socket, private_room_id) do
+    private_room_id =~ "#{socket.assigns.current_user}"
   end
 end
