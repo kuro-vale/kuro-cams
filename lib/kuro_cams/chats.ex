@@ -20,13 +20,13 @@ defmodule KuroCams.Chats do
 
   @doc """
   If user A wants to chat with user B, will create a room from A to B, and user B will create a room from B to A
-  This methods get that pair of rooms ordered by users id
+  This methods get that pair of rooms
   """
   def get_pair_rooms_by_uuid(uuid) do
     room =  get_room_by_uuid!(uuid)
     supplier_query = from r in Room, where: r.from_user == ^room.to_user and r.to_user == ^room.from_user
     query = from r in Room, where: r.from_user == ^room.from_user and r.to_user == ^room.to_user, union: ^supplier_query
-    Repo.all(from q in subquery(query), order_by: q.from_user)
+    Repo.all(query)
   end
 
   @doc """

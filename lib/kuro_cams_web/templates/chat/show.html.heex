@@ -71,36 +71,35 @@ function sendMessage(event) {
     event.preventDefault()
     return false;
   }
-  channel.push("new_msg", {body: input.value, user: <%= @current_user.id %>})
+  channel.push("new_msg", {body: input.value, user: <%= @current_user.id %>, uuid: "<%= @room.uuid %>"})
   input.value = ''
   event.preventDefault()
 }
 
 channel.on("new_msg", payload => {
   let messageCard = document.createElement("div")
+  let messageContainer = document.createElement("div")
+  let messageTitle = document.createElement("h4")
+  let messageBody = document.createElement("p")
+
   if (payload.user == <%= @current_user.id %>) {
     messageCard.className = "flex justify-end gap-6 mb-4"
-    let messageContainer = document.createElement("div")
     messageContainer.className = "min-w-0 p-4 text-white bg-purple-600 rounded-lg shadow-xs"
-    let messageTitle = document.createElement("h4")
     messageTitle.className = "mb-4 font-semibold"
-    messageTitle.innerText = <%= @from_username %>
-    let messageBody = document.createElement("p")
+    messageTitle.innerText = "<%= @from_username %>"
     messageBody.className = "break-words"
   } else {
     messageCard.className = "flex justify-start gap-6 mb-4"
-    let messageContainer = document.createElement("div")
     messageContainer.className = "min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-    let messageTitle = document.createElement("h4")
     messageTitle.className = "mb-4 font-semibold text-gray-600 dark:text-gray-300"
-    messageTitle.innerText = <%= @to_username %>
-    let messageBody = document.createElement("p")
+    messageTitle.innerText = "<%= @to_username %>"
     messageBody.className = "text-gray-600 dark:text-gray-400 break-words"
   }
   messageBody.innerText = payload.body
   messageContainer.appendChild(messageTitle)
   messageContainer.appendChild(messageBody)
   messageCard.appendChild(messageContainer)
+  box.appendChild(messageCard)
   box.scrollTop = box.scrollHeight;
 })
 
