@@ -10,6 +10,8 @@ defmodule KuroCams.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
 
+    has_many :rooms, KuroCams.Chats.Room, foreign_key: :from_user
+
     timestamps()
   end
 
@@ -40,7 +42,9 @@ defmodule KuroCams.Accounts.User do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/, message: "must be a valid username")
+    |> validate_format(:username, ~r/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/,
+      message: "must be a valid username"
+    )
     |> validate_length(:username, min: 3, max: 29)
     |> unsafe_validate_unique(:username, KuroCams.Repo)
     |> unique_constraint(:username)

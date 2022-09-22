@@ -39,7 +39,12 @@ defmodule KuroCamsWeb.ChatController do
 
     room_messages = Chats.list_room_messages(room.id)
 
-    render(conn, "show.html", room: room, messages: room_messages, from_username: from_username, to_username: to_username)
+    render(conn, "show.html",
+      room: room,
+      messages: room_messages,
+      from_username: from_username,
+      to_username: to_username
+    )
   end
 
   def delete(conn, %{"uuid" => uuid}) do

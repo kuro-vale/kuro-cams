@@ -7,6 +7,7 @@ defmodule KuroCamsWeb.LayoutView do
 
   def active_class(conn, path) do
     current_path = Path.join(["/" | conn.path_info])
+
     if path == current_path do
       "text-gray-800 dark:text-gray-100"
     else

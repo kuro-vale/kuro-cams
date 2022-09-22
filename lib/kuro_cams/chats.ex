@@ -23,9 +23,16 @@ defmodule KuroCams.Chats do
   This methods get that pair of rooms
   """
   def get_pair_rooms_by_uuid(uuid) do
-    room =  get_room_by_uuid!(uuid)
-    supplier_query = from r in Room, where: r.from_user == ^room.to_user and r.to_user == ^room.from_user
-    query = from r in Room, where: r.from_user == ^room.from_user and r.to_user == ^room.to_user, union: ^supplier_query
+    room = get_room_by_uuid!(uuid)
+
+    supplier_query =
+      from r in Room, where: r.from_user == ^room.to_user and r.to_user == ^room.from_user
+
+    query =
+      from r in Room,
+        where: r.from_user == ^room.from_user and r.to_user == ^room.to_user,
+        union: ^supplier_query
+
     Repo.all(query)
   end
 

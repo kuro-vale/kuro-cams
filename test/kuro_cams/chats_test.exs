@@ -47,7 +47,12 @@ defmodule KuroCams.ChatsTest do
     test "create_room/1 with valid data creates a room" do
       from_user = user_fixture()
       to_user = user_fixture()
-      valid_attrs = %{uuid: "7488a646-e31f-11e4-aace-600308960662", from_user: from_user.id, to_user: to_user.id}
+
+      valid_attrs = %{
+        uuid: "7488a646-e31f-11e4-aace-600308960662",
+        from_user: from_user.id,
+        to_user: to_user.id
+      }
 
       assert {:ok, %Room{} = room} = Chats.create_room(valid_attrs)
       assert room.uuid == "7488a646-e31f-11e4-aace-600308960662"

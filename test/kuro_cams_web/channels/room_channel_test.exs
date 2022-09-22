@@ -13,7 +13,12 @@ defmodule KuroCamsWeb.RoomChannelTest do
   end
 
   test "new_msg broadcasts to room:1-2", %{socket: socket, room: room} do
-    push(socket, "new_msg", %{"body" => "hello", "user" => "#{room.from_user}", "uuid" => "#{room.uuid}"})
+    push(socket, "new_msg", %{
+      "body" => "hello",
+      "user" => "#{room.from_user}",
+      "uuid" => "#{room.uuid}"
+    })
+
     assert_broadcast "new_msg", %{"body" => "hello"}
   end
 

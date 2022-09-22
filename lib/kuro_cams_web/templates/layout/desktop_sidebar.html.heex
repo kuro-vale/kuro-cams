@@ -97,14 +97,14 @@ class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-
                     class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
                     aria-label="submenu"
                 >
-                <%= if Enum.empty? KuroCams.Chats.get_rooms_by_user(@current_user.id) do %>
+                <%= if Enum.empty? @current_user.rooms do %>
                     <li
                     class="flex justify-between px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                     >
                     <p class="w-full">You don't have chats</p>
                     </li>
                 <% end %>
-                <%= for room <- KuroCams.Chats.get_rooms_by_user(@current_user.id) do %>
+                <%= for room <- @current_user.rooms do %>
                     <li
                     class="flex justify-between px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                     >
