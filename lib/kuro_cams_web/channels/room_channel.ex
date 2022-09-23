@@ -26,6 +26,24 @@ defmodule KuroCamsWeb.RoomChannel do
   def handle_in("new_msg", payload, socket) do
     pair_rooms = Chats.get_pair_rooms_by_uuid(payload["uuid"])
 
+    IO.puts(length(pair_rooms))
+
+    pair_rooms =
+      if length(pair_rooms) == 1 do
+        new_room = %{
+          uuid: Ecto.UUID.generate(),
+          from_user: Enum.at(pair_rooms, 0).to_user,
+          to_user: payload["user"]
+        }
+
+        case Chats.create_room(new_room) do
+          {:ok, room} ->
+            Enum.concat(pair_rooms, [room])
+        end
+      else
+        pair_rooms
+      end
+
     for room <- pair_rooms do
       Chats.create_message(%{
         body: payload["body"],
