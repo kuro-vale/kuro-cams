@@ -39,6 +39,14 @@ defmodule KuroCamsWeb.Router do
     delete "/chats/:uuid", ChatController, :delete
   end
 
+  # Live Routes
+
+  scope "/", KuroCamsWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/video_rooms/:uuid", VideoRoomLive.Show, :show
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", KuroCamsWeb do
   #   pipe_through :api
