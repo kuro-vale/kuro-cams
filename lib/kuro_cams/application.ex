@@ -15,7 +15,8 @@ defmodule KuroCams.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: KuroCams.PubSub},
       # Start the Endpoint (http/https)
-      KuroCamsWeb.Endpoint
+      KuroCamsWeb.Endpoint,
+      KuroCamsWeb.Presence
       # Start a worker by calling: KuroCams.Worker.start_link(arg)
       # {KuroCams.Worker, arg}
     ]

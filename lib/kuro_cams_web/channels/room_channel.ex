@@ -5,6 +5,13 @@ defmodule KuroCamsWeb.RoomChannel do
   use KuroCamsWeb, :channel
 
   alias KuroCams.Chats
+  alias KuroCamsWeb.Presence
+
+  @impl true
+  def join("room:lobby", _payload, socket) do
+    send(self(), :after_join)
+    {:ok, socket}
+  end
 
   @impl true
   def join("room:" <> private_room_id, _payload, socket) do
@@ -28,6 +35,17 @@ defmodule KuroCamsWeb.RoomChannel do
     end
 
     broadcast(socket, "new_msg", payload)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(:after_join, socket) do
+    {:ok, _} =
+      Presence.track(socket, "#{socket.assigns.current_user}", %{
+        online_at: inspect(System.system_time(:second))
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 

@@ -1,11 +1,15 @@
 <div class="container px-6 mx-auto grid">
-  <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-  <%= @to_username %>
-  <span
-      class="ml-3 text-xs px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
-  >
-      Online
-  </span>
+  <h2 class="flex justify-between mt-6 mb-3 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+  <div class="flex">
+    <%= @to_username %>
+    <div class="ml-3 text-xs mt-2">
+      <span id={"#{@room.to_user}_presence"} name="presence_badges"
+          class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700"
+      >
+          Offline
+      </span>
+    </div>
+  </div>
   </h2>
   <div id="messages" class="overflow-auto" style="height: 67vh">
   <%= for message <- @messages do %>
@@ -104,6 +108,4 @@ channel.on("new_msg", payload => {
 })
 
 channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
 </script>
