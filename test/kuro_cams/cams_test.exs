@@ -11,9 +11,9 @@ defmodule KuroCams.CamsTest do
 
     @invalid_attrs %{uuid: nil}
 
-    test "get_video_room_by_uuid/1 returns the video_room with given id" do
+    test "get_video_room_by_uuid/1 returns the video_room with given uuid" do
       video_room = video_room_fixture()
-      assert Cams.get_video_room_by_uuid(video_room.uuid) == video_room
+      assert Cams.get_video_room_by_uuid(video_room.uuid).id == video_room.id
     end
 
     test "get_existing_video_room/1 return an existing video room" do

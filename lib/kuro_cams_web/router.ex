@@ -43,7 +43,7 @@ defmodule KuroCamsWeb.Router do
   # Video Room Routes
 
   scope "/", KuroCamsWeb do
-    pipe_through [:browser, :require_authenticated_user]
+    pipe_through [:browser, :require_authenticated_user, :require_video_room_authorized_user]
 
     live "/video_rooms/:uuid", VideoRoomLive.Show, :show
   end

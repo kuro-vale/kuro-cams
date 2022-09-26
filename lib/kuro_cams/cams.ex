@@ -8,7 +8,11 @@ defmodule KuroCams.Cams do
 
   alias KuroCams.Cams.VideoRoom
 
-  def get_video_room_by_uuid(uuid), do: Repo.get_by(VideoRoom, uuid: uuid)
+  def get_video_room_by_uuid(uuid) do
+    VideoRoom
+    |> Repo.get_by(uuid: uuid)
+    |> Repo.preload(:room)
+  end
 
   def get_existing_video_room(uuid) do
     pair_rooms = KuroCams.Chats.get_pair_rooms_by_uuid(uuid)

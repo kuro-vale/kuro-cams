@@ -164,6 +164,21 @@ defmodule KuroCamsWeb.UserAuth do
     end
   end
 
+  def require_video_room_authorized_user(conn, _opts) do
+    current_user = conn.assigns[:current_user]
+    video_room = KuroCams.Cams.get_video_room_by_uuid(conn.path_params["uuid"])
+
+    if video_room == nil do
+      raise KuroCamsWeb.NotFoundError, "Not Found"
+    end
+
+    if current_user.id == video_room.room.from_user || current_user.id == video_room.room.to_user do
+      conn
+    else
+      raise KuroCamsWeb.ForbiddenError, "Forbidden"
+    end
+  end
+
   def put_user_token(conn, _) do
     if current_user = conn.assigns[:current_user] do
       token = Phoenix.Token.sign(conn, "user socket", current_user.id)
