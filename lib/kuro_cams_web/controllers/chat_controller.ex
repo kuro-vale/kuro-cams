@@ -2,6 +2,7 @@ defmodule KuroCamsWeb.ChatController do
   use KuroCamsWeb, :controller
 
   alias KuroCams.Chats
+  alias KuroCams.Cams
 
   def create(conn, %{"to_user" => to_user}) do
     logged_user_id = conn.assigns.current_user.id
@@ -53,5 +54,27 @@ defmodule KuroCamsWeb.ChatController do
 
     conn
     |> redirect(to: Routes.home_path(conn, :index))
+  end
+
+  def create_video_room(conn, %{"uuid" => uuid}) do
+    existing_video_room = Cams.get_existing_video_room(uuid)
+
+    if existing_video_room do
+      conn
+      |> redirect(to: Routes.video_room_show_path(conn, :show, existing_video_room.uuid))
+    else
+      room = Chats.get_room_by_uuid!(uuid)
+      new_video_room = %{uuid: Ecto.UUID.generate(), room_id: room.id}
+
+      case Cams.create_video_room(new_video_room) do
+        {:ok, video_room} ->
+          conn
+          |> redirect(to: Routes.video_room_show_path(conn, :show, video_room.uuid))
+
+        {:error, %Ecto.Changeset{}} ->
+          conn
+          |> redirect(to: Routes.home_path(conn, :index))
+      end
+    end
   end
 end

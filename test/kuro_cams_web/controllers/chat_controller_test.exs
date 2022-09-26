@@ -67,7 +67,7 @@ defmodule KuroCamsWeb.ChatControllerTest do
     end
   end
 
-  describe "delete room" do
+  describe "Delete /chats/:uuid" do
     test "deletes chosen room", %{conn: conn, user: logged_user} do
       room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
       conn = delete(conn, Routes.chat_path(conn, :delete, room.uuid))
@@ -90,6 +90,37 @@ defmodule KuroCamsWeb.ChatControllerTest do
       room = KuroCams.ChatsFixtures.room_fixture()
       conn = build_conn()
       conn = delete(conn, Routes.chat_path(conn, :delete, room.uuid))
+      assert redirected_to(conn) == Routes.user_session_path(conn, :new)
+    end
+  end
+
+  describe "POST /chats/:uuid/video_rooms" do
+    test "redirects to show when data is valid", %{conn: conn, user: logged_user} do
+      room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
+      conn = post(conn, Routes.chat_path(conn, :create_video_room, room.uuid))
+
+      assert %{uuid: uuid} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.video_room_show_path(conn, :show, uuid)
+
+      conn = get(conn, Routes.video_room_show_path(conn, :show, uuid))
+      assert html_response(conn, 200) =~ "Show Video room"
+    end
+
+    test "redirect to show if video room already exists", %{conn: conn, user: logged_user} do
+      room = KuroCams.ChatsFixtures.room_fixture(from_user: logged_user.id)
+      video_room = KuroCams.CamsFixtures.video_room_fixture(room_id: room.id)
+
+      conn = post(conn, Routes.chat_path(conn, :create_video_room, room.uuid))
+
+      assert %{uuid: uuid} = redirected_params(conn)
+      assert video_room.uuid == uuid
+      assert redirected_to(conn) == Routes.video_room_show_path(conn, :show, uuid)
+    end
+
+    test "redirects if user is not logged in" do
+      room = KuroCams.ChatsFixtures.room_fixture()
+      conn = build_conn()
+      conn = post(conn, Routes.chat_path(conn, :create_video_room, room.uuid))
       assert redirected_to(conn) == Routes.user_session_path(conn, :new)
     end
   end
