@@ -15,7 +15,7 @@ defmodule KuroCamsWeb.VideoRoomLiveTest do
       {:ok, _show_live, html} =
         live(conn, Routes.video_room_show_path(conn, :show, video_room.uuid))
 
-      assert html =~ "Show Video room"
+      assert html =~ "<button id=\"join-call\""
     end
 
     test "raise error if user is unauthorized", %{conn: conn} do

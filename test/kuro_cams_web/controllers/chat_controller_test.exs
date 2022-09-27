@@ -101,9 +101,6 @@ defmodule KuroCamsWeb.ChatControllerTest do
 
       assert %{uuid: uuid} = redirected_params(conn)
       assert redirected_to(conn) == Routes.video_room_show_path(conn, :show, uuid)
-
-      conn = get(conn, Routes.video_room_show_path(conn, :show, uuid))
-      assert html_response(conn, 200) =~ "Show Video room"
     end
 
     test "redirect to show if video room already exists", %{conn: conn, user: logged_user} do
