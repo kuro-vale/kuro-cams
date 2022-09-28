@@ -10,10 +10,10 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
   end
 
   @impl true
-  def handle_params(%{"uuid" => uuid, "id" => user_id}, _, socket) do
+  def handle_params(%{"uuid" => uuid}, _, socket) do
     Phoenix.PubSub.subscribe(
       KuroCams.PubSub,
-      "room:" <> uuid <> ":" <> user_id
+      "room:" <> uuid
     )
 
     {:noreply,
@@ -22,28 +22,15 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
      |> assign(:offer_request, nil)
      |> assign(:ice_candidate_offer, nil)
      |> assign(:sdp_offer, nil)
-     |> assign(:answer, nil)
-     |> assign(:user_id, user_id)}
+     |> assign(:answer, nil)}
   end
 
   @impl true
   def handle_event("join_call", _params, socket) do
     send_direct_message(
       socket.assigns.video_room.uuid,
-      socket.assigns.video_room.room.from_user,
       "request_offer",
-      %{
-        from_user: socket.assigns.user_id
-      }
-    )
-
-    send_direct_message(
-      socket.assigns.video_room.uuid,
-      socket.assigns.video_room.room.to_user,
-      "request_offer",
-      %{
-        from_user: socket.assigns.user_id
-      }
+      %{}
     )
 
     {:noreply, socket}
@@ -51,11 +38,8 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
 
   @impl true
   def handle_event("ice_candidate", payload, socket) do
-    payload = Map.merge(payload, %{"from_user" => socket.assigns.user_id})
-
     send_direct_message(
       socket.assigns.video_room.uuid,
-      payload["toUser"],
       "ice_candidate",
       payload
     )
@@ -65,11 +49,8 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
 
   @impl true
   def handle_event("sdp_offer", payload, socket) do
-    payload = Map.merge(payload, %{"from_user" => socket.assigns.user_id})
-
     send_direct_message(
       socket.assigns.video_room.uuid,
-      payload["toUser"],
       "sdp_offer",
       payload
     )
@@ -79,11 +60,8 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
 
   @impl true
   def handle_event("answer", payload, socket) do
-    payload = Map.merge(payload, %{"from_user" => socket.assigns.user_id})
-
     send_direct_message(
       socket.assigns.video_room.uuid,
-      payload["toUser"],
       "answer",
       payload
     )
@@ -118,10 +96,10 @@ defmodule KuroCamsWeb.VideoRoomLive.Show do
      |> assign(:answer, payload)}
   end
 
-  defp send_direct_message(uuid, to_user, event, payload) do
+  defp send_direct_message(uuid, event, payload) do
     KuroCamsWeb.Endpoint.broadcast_from(
       self(),
-      "room:" <> uuid <> ":" <> "#{to_user}",
+      "room:" <> uuid,
       event,
       payload
     )

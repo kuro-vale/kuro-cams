@@ -1,4 +1,4 @@
-var remoteUser = {}
+var remoteUser = { peerConnection: null }
 var localStream
 async function initStream() {
     try {
@@ -10,7 +10,7 @@ async function initStream() {
     }
 }
 
-function createPeerConnection(lv, fromUser, offer) {
+function createPeerConnection(lv, offer) {
     let newPeerConnection = new RTCPeerConnection({
         iceServers: [
             { urls: "stun:127.0.0.1:3478" }
@@ -26,14 +26,13 @@ function createPeerConnection(lv, fromUser, offer) {
         newPeerConnection.createAnswer()
             .then((answer) => {
                 newPeerConnection.setLocalDescription(answer)
-                console.log("Sending this ANSWER to the requester:", answer)
-                lv.pushEvent("answer", { toUser: fromUser, description: answer })
+                lv.pushEvent("answer", { description: answer })
             })
             .catch((err) => console.log(err))
     }
 
     newPeerConnection.onicecandidate = async ({ candidate }) => {
-        lv.pushEvent("ice_candidate", { toUser: fromUser, candidate })
+        lv.pushEvent("ice_candidate", { candidate })
     }
 
     if (offer === undefined) {
@@ -42,8 +41,7 @@ function createPeerConnection(lv, fromUser, offer) {
                 newPeerConnection.createOffer()
                     .then((offer) => {
                         newPeerConnection.setLocalDescription(offer)
-                        console.log("Sending this OFFER to the requester:", offer)
-                        lv.pushEvent("sdp_offer", { toUser: fromUser, description: offer })
+                        lv.pushEvent("sdp_offer", { description: offer })
                     })
                     .catch((err) => console.log(err))
             }
@@ -54,7 +52,6 @@ function createPeerConnection(lv, fromUser, offer) {
     }
 
     newPeerConnection.ontrack = async (event) => {
-        console.log("Track received:", event)
         document.getElementById("remote-video").srcObject = event.streams[0]
     }
 
@@ -68,31 +65,16 @@ Hooks.JoinCall = {
     }
 }
 
-Hooks.InitUser = {
-    mounted() {
-        remoteUser = { peerConnection: null }
-    },
-
-    destroyed() {
-        remoteUser = {}
-    }
-}
-
 Hooks.HandleOfferRequest = {
     mounted() {
-        let fromUser = this.el.dataset.fromUserId
-        console.log("new offer request from", fromUser)
-        createPeerConnection(this, fromUser)
+        createPeerConnection(this)
     }
 }
 Hooks.HandleIceCandidateOffer = {
     mounted() {
         let data = this.el.dataset
-        let fromUser = data.fromUserId
         let iceCandidate = JSON.parse(data.iceCandidate)
         let peerConnection = remoteUser.peerConnection
-
-        console.log("new ice candidate from", fromUser, iceCandidate)
 
         peerConnection.addIceCandidate(iceCandidate)
     }
@@ -101,13 +83,10 @@ Hooks.HandleIceCandidateOffer = {
 Hooks.HandleSdpOffer = {
     mounted() {
         let data = this.el.dataset
-        let fromUser = data.fromUserId
         let sdp = data.sdp
 
         if (sdp != "") {
-            console.log("new sdp OFFER from", data.fromUser, data.sdp)
-
-            createPeerConnection(this, fromUser, sdp)
+            createPeerConnection(this, sdp)
         }
     }
 }
@@ -115,12 +94,10 @@ Hooks.HandleSdpOffer = {
 Hooks.HandleAnswer = {
     mounted() {
         let data = this.el.dataset
-        let fromUser = data.fromUserId
         let sdp = data.sdp
         let peerConnection = remoteUser.peerConnection
 
         if (sdp != "") {
-            console.log("new sdp ANSWER from", fromUser, sdp)
             peerConnection.setRemoteDescription({ type: "answer", sdp: sdp })
         }
     }
