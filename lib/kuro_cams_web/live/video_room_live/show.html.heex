@@ -1,13 +1,15 @@
 <div class="container px-6 mx-auto grid">
   <.live_component module={KuroCamsWeb.CtaComponent} id="CTA"/>
   <div class="grid gap-6 my-6 md:grid-cols-1 xl:grid-cols-2 xl:my-12">
-    <video class="w" id="local-video" playsinline autoplay muted style="transform: rotateY(180deg);"></video>
-    <video class="w" id="local-video-test" playsinline autoplay muted style="transform: rotateY(180deg);"></video>
+    <video id="local-video" playsinline autoplay muted style="transform: rotateY(180deg);"></video>
+    <video id="remote-video" playsinline autoplay phx-hook="InitUser" style="transform: rotateY(180deg);"></video>
   </div>
   <div class="flex justify-center">
     <button id="join-call"
     class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-full active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
-    phx-hook="JoinCall">
+    phx-hook="JoinCall"
+    phx-click="join_call"
+    >
       <svg
         class="w-12 h-12"
         aria-hidden="true"
@@ -20,3 +22,19 @@
     </button>
   </div>
 </div>
+
+<%= if @sdp_offer do %>
+  <span id="sdp_offer" phx-hook="HandleSdpOffer" data-from-user-id={"#{@sdp_offer["from_user"]}"} data-sdp={"#{@sdp_offer["description"]["sdp"]}"}></span>
+<% end %>
+
+<%= if @answer do %>
+  <span id="sdp_answer" phx-hook="HandleAnswer" data-from-user-id={"#{@answer["from_user"]}"} data-sdp={"#{@answer["description"]["sdp"]}"}></span>
+<% end %>
+
+<%= if @ice_candidate_offer do %>
+  <span id="ice_candidate_offer" phx-hook="HandleIceCandidateOffer" data-from-user-id={"#{@ice_candidate_offer["from_user"]}"} data-ice-candidate={"#{Jason.encode!(@ice_candidate_offer["candidate"])}"}></span>
+<% end %>
+
+<%= if @offer_request do %>
+  <span id="offer_request" phx-hook="HandleOfferRequest" data-from-user-id={"#{@offer_request.from_user}"}></span>
+<% end %>

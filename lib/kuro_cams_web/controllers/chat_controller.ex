@@ -61,7 +61,7 @@ defmodule KuroCamsWeb.ChatController do
 
     if existing_video_room do
       conn
-      |> redirect(to: Routes.video_room_show_path(conn, :show, existing_video_room.uuid))
+      |> redirect(to: Routes.video_room_show_path(conn, :show, existing_video_room.uuid, id: conn.assigns.current_user.id))
     else
       room = Chats.get_room_by_uuid!(uuid)
       new_video_room = %{uuid: Ecto.UUID.generate(), room_id: room.id}
@@ -69,7 +69,7 @@ defmodule KuroCamsWeb.ChatController do
       case Cams.create_video_room(new_video_room) do
         {:ok, video_room} ->
           conn
-          |> redirect(to: Routes.video_room_show_path(conn, :show, video_room.uuid))
+          |> redirect(to: Routes.video_room_show_path(conn, :show, video_room.uuid, id: conn.assigns.current_user.id))
 
         {:error, %Ecto.Changeset{}} ->
           conn
