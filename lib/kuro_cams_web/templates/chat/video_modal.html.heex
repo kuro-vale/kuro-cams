@@ -47,16 +47,17 @@
     </header>
     <!-- Modal body -->
     <div class="mt-4 mb-6">
-        <video id="local-video" playsinline autoplay muted style="transform: rotateY(180deg);"></video>
+        <video id="local-video" class="fixed w-40" playsinline autoplay muted style="transform: rotateY(180deg);"></video>
         <video id="remote-video" playsinline autoplay></video>
     </div>
     <footer
-        class="flex items-center justify-evenly px-6 py-3 -mx-6 -mb-4 bg-gray-50 dark:bg-gray-800"
+        class="flex items-center justify-center px-6 py-3 -mx-6 -mb-4 bg-gray-50 dark:bg-gray-800"
     >
         <button
         class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-full active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-purple"
         >
         <svg
+        id="call_button"
         class="w-5 h-5"
         aria-hidden="true"
         fill="currentColor"
@@ -66,26 +67,58 @@
         />
         </svg>
         </button>
-        <button
-        @click="closeModal"
-        class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-full active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-purple"
-        >
-        <svg
-        class="w-5 h-5"
-        aria-hidden="true"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        >
-        <path d="M16 22.621l-3.521-6.795c-.007.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.082-1.026-3.492-6.817-2.106 1.039c-1.639.855-2.313 2.666-2.289 4.916.075 6.948 6.809 18.071 12.309 18.045.541-.003 1.07-.113 1.58-.346.121-.055 2.102-1.029 2.11-1.033zm-2.5-13.621c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5zm9 0c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5zm-4.5 0c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5z"
-        />
-        </svg>
-        </button>
     </footer>
     </div>
 </div>
 <!-- End of modal backdrop -->
 
 <script type="module">
-const peer = new Peer("kuro-cams-user-number-<%= @current_user.id %>");
+let callButton = document.getElementById("call_button")
+callButton.addEventListener("click", initCall);
+
+let localVideo = document.getElementById("local-video")
+let remoteVideo = document.getElementById("remote-video")
+
+let renderVideo = async (stream) => {
+  remoteVideo.srcObject = stream;
+  localVideo.srcObject = await navigator.mediaDevices.getUserMedia({ audio: false, video: true})
+};
+
+let peer = new Peer("kuro-cams-user-number-<%= @current_user.id %>", {
+    host: '<%= System.get_env("PEERJS_SERVER") || "0.peerjs.com" %>',
+    path: '/'
+});
 console.log(peer)
+peer.on("connection", (conn) => {
+	conn.on("data", (data) => {
+		console.log(data);
+	});
+});
+peer.on('call', (call) => {
+  navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    .then((stream) => {
+      call.answer(stream); // Answer the call with an A/V stream.
+      call.on('stream', renderVideo);
+    })
+    .catch((err) => {
+      console.error('Failed to get local stream', err);
+    });
+});
+
+function initCall() {
+    let peerId = "kuro-cams-user-number-<%= @room.to_user %>"
+    let conn = peer.connect(peerId);
+    conn.on("open", () => {
+        conn.send("hi!");
+    });
+
+    navigator.mediaDevices.getUserMedia({video: true, audio: true})
+    .then((stream) => {
+      let call = peer.call(peerId, stream);
+      call.on('stream', renderVideo);
+    })
+    .catch((err) => {
+      logMessage('Failed to get local stream', err);
+    });
+}
 </script>
