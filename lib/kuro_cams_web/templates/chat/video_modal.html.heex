@@ -88,7 +88,6 @@ let peer = new Peer("kuro-cams-user-number-<%= @current_user.id %>", {
     host: '<%= System.get_env("PEERJS_SERVER") || "0.peerjs.com" %>',
     path: '/'
 });
-console.log(peer)
 peer.on("connection", (conn) => {
 	conn.on("data", (data) => {
 		console.log(data);
