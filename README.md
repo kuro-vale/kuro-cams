@@ -1,5 +1,8 @@
 # KuroCams
 
+[![Tests](https://github.com/kuro-vale/kuro-cams/actions/workflows/tests.yml/badge.svg)](https://github.com/kuro-vale/kuro-cams/actions/workflows/tests.yml)
+[![Lint](https://github.com/kuro-vale/kuro-cams/actions/workflows/lint.yml/badge.svg)](https://github.com/kuro-vale/kuro-cams/actions/workflows/lint.yml)
+
 Video chat app made with Phoenix Framework
 
 ### Features
