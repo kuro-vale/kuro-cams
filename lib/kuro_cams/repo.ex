@@ -1,5 +1,5 @@
 defmodule KuroCams.Repo do
   use Ecto.Repo,
     otp_app: :kuro_cams,
-    adapter: Ecto.Adapters.Postgres
+    adapter: Ecto.Adapters.SQLite3
 end

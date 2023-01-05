@@ -77,16 +77,7 @@ USER nobody
 
 EXPOSE 4000
 
-# Required env vars
-
 ENV SECRET_KEY_BASE="Z9I0STPfkl33qZLEipnVkeuhNFIkWqpyRmc8xKK0Qy27s7/Lf3xBrPNmz7Fx+bqq"
-## ENV DATABASE_URL=
 
-# Optional env vars
-
-## ENV PEERJS_SERVER=
-# Connection to websocket will refuse if PHX_HOST is not the server url (default is localhost)
-## ENV PHX_HOST=
-
-COPY docker-entrypoint.sh .
-CMD [ "sh", "docker-entrypoint.sh" ]
+RUN ./bin/kuro_cams eval "KuroCams.Release.migrate"
+CMD [ "./bin/server" ]

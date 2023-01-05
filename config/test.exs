@@ -1,7 +1,5 @@
 import Config
 
-database_url = System.get_env("TEST_DATABASE_URL")
-
 # Only in tests, remove the complexity from the password hashing algorithm
 config :bcrypt_elixir, :log_rounds, 1
 
@@ -11,8 +9,7 @@ config :bcrypt_elixir, :log_rounds, 1
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :kuro_cams, KuroCams.Repo,
-  url: database_url,
-  database: "kuro_cams_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: Path.expand("../test.db", Path.dirname(__ENV__.file)),
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
