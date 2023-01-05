@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  app:
+    image: kurovale/kuro-cams:sqlite
+    ports:
+      - 4000:4000
